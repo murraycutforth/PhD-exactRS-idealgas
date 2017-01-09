@@ -116,7 +116,7 @@ void exact_rs_idealgas :: solve_RP (blitz::Array<double,1> W_L_in, blitz::Array<
 
 
 
-void exact_rs_idealgas solve_2D_RP (blitz::Array<double,1> W_L, blitz::Array<double,1> W_R)
+void exact_rs_idealgas :: solve_2D_RP (blitz::Array<double,1> W_L, blitz::Array<double,1> W_R)
 {
 	assert(W_L.extent(blitz::firstDim) == 4);
 	assert(W_R.extent(blitz::firstDim) == 4);
