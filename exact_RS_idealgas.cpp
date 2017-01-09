@@ -27,7 +27,9 @@ exact_rs_idealgas :: exact_rs_idealgas (double gamma_L, double gamma_R)
 	right_rarefaction	(false),
 	right_shock	(false),
 	gamma_L	(gamma_L),
-	gamma_R	(gamma_R)
+	gamma_R	(gamma_R),
+	v_L	(0.0),
+	v_R	(0.0) 
 {}
 
 
@@ -113,6 +115,30 @@ void exact_rs_idealgas :: solve_RP (blitz::Array<double,1> W_L_in, blitz::Array<
 }
 
 
+
+void exact_rs_idealgas solve_2D_RP (blitz::Array<double,1> W_L, blitz::Array<double,1> W_R)
+{
+	assert(W_L.extent(blitz::firstDim) == 4);
+	assert(W_R.extent(blitz::firstDim) == 4);
+
+	v_L = W_L(2);
+	v_R = W_R(2);
+
+
+	// Solve the 1D Riemann problem first, ignoring the transverse velocity component
+
+	blitz::Array<double,1> W_L_1D (3);
+	W_L_1D(0) = W_L(0);
+	W_L_1D(1) = W_L(1);
+	W_L_1D(2) = W_L(3);
+
+	blitz::Array<double,1> W_R_1D (3);
+	W_R_1D(0) = W_R(0);
+	W_R_1D(1) = W_R(1);
+	W_R_1D(2) = W_R(3);
+
+	solve_RP(W_L_1D, W_R_1D);
+}
 
 
 
@@ -208,6 +234,30 @@ blitz::Array<double,1> exact_rs_idealgas :: sample_solution (double S)
 
 
 
+
+blitz::Array<double,1> exact_rs_idealgas :: sample_2D_solution (double S)
+{
+	// First find rho, u, P using identical 1D solution
+
+	blitz::Array<double,1> W_1D (sample_solution(S));
+
+
+	// Now set transverse velocity component (which is advected passively)
+
+	blitz::Array<double,1> W (4);
+	W(0) = W_1D(0);
+	W(1) = W_1D(1);
+	W(3) = W_1D(2);
+
+	if (S < S_STAR)
+	{
+		W(2) = v_L;
+	}
+	else
+	{
+		W(2) = v_R;
+	}
+}
 
 
 

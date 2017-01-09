@@ -43,6 +43,9 @@ class exact_rs_idealgas {
 	double gamma_L;
 	double gamma_R;
 
+	double v_L;
+	double v_R;
+
 	
 
 	// Top-level functions which will usually be called outside this class
@@ -52,6 +55,10 @@ class exact_rs_idealgas {
 	void solve_RP (blitz::Array<double,1> W_L, blitz::Array<double,1> W_R);
 
 	blitz::Array<double,1> sample_solution (double S);
+
+	void solve_2D_RP (blitz::Array<double,1> W_L, blitz::Array<double,1> W_R);
+
+	blitz::Array<double,1> sample_2D_solution (double S);
 
 
 	
