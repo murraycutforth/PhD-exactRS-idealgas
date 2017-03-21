@@ -20,55 +20,74 @@
 class exact_rs_idealgas {
 
 	public:
-
-	blitz::Array<double,1> W_L;
-	blitz::Array<double,1> W_STAR_L;
-	blitz::Array<double,1> W_STAR_R;
-	blitz::Array<double,1> W_R;
-
+	
+	const double gamma_L;
+	const double gamma_R;
+	
+	double S_STAR;
+	double P_STAR;
+	double rho_star_L;
+	double rho_star_R;
+	
 	double S_L;
 	double S_R;
-	double S_STAR;
 	double S_HL;
 	double S_TL;
 	double S_HR;
 	double S_TR;
-	double P_STAR;
 
-	bool left_rarefaction;
-	bool left_shock;
-	bool right_rarefaction;
-	bool right_shock;
-
-	double gamma_L;
-	double gamma_R;
-
-	double v_L;
-	double v_R;
-
+	exact_rs_idealgas (double gamma_L, double gamma_R);
 	
+	
+	// Functions used to generate exact solutions to Riemann problems
 
-	// Top-level functions which will usually be called outside this class
+	void solve_RP (const blitz::Array<double,1>& W_L, const blitz::Array<double,1>& W_R);
 
-	exact_rs_idealgas(double gamma_L, double gamma_R);
-
-	void solve_RP (blitz::Array<double,1> W_L, blitz::Array<double,1> W_R);
-
-	blitz::Array<double,1> sample_solution (double S);
-
-	void solve_2D_RP (blitz::Array<double,1> W_L, blitz::Array<double,1> W_R);
-
-	blitz::Array<double,1> sample_2D_solution (double S);
+	blitz::Array<double,1> sample_solution (const blitz::Array<double,1>& W_L, const blitz::Array<double,1>& W_R, double S);
+	
+	
+	// Function called from 2D Godunov-type methods
+	
+	void celledge_primitives_2D (
+		
+		const blitz::Array<double,1>& W_L, 
+		const blitz::Array<double,1>& W_R,
+		blitz::Array<double,1>& soln
+	);
 
 
 	
 	// Functions used to solve for p_star iteratively
 
-	double find_p_star_newtonraphson ();
+	double find_p_star_newtonraphson (
+	
+		const double rho_L,
+		const double u_L,
+		const double p_L,
+		const double rho_R,
+		const double u_R,
+		const double p_R
+	);
 
-	double total_pressure_function (double p_star);
+	double total_pressure_function (
 
-	double total_pressure_function_deriv (double p_star);
+		const double p_star,
+		const double rho_L,
+		const double u_L,
+		const double p_L,
+		const double rho_R,
+		const double u_R,
+		const double p_R
+	);
+
+	double total_pressure_function_deriv (
+
+		const double p_star,
+		const double rho_L,
+		const double p_L,
+		const double rho_R,
+		const double p_R
+	);
 
 	double f (double p_star, double rho, double p, double gamma);
 
@@ -78,9 +97,9 @@ class exact_rs_idealgas {
 
 	// Functions to find the state inside a rarefaction fan
 
-	blitz::Array<double,1> left_rarefaction_fan_state (double S);
+	void set_left_rarefaction_fan_state (const blitz::Array<double,1>& W_L, double S, blitz::Array<double,1>& W);
 
-	blitz::Array<double,1> right_rarefaction_fan_state (double S);
+	void set_right_rarefaction_fan_state (const blitz::Array<double,1>& W_R, double S, blitz::Array<double,1>& W);
 
 
 
