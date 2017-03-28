@@ -233,7 +233,7 @@ void exact_rs_idealgas :: celledge_primitives_2D (
 			}
 			else
 			{
-				soln(0) = W_L(0)*((P_STAR/W_L(2))+((gamma_L-1.0)/(gamma_L+1.0)))/(1.0+((P_STAR/W_L(2))*(gamma_L-1.0)/(gamma_L+1.0)));
+				soln(0) = W_L(0)*((P_STAR/W_L(3))+((gamma_L-1.0)/(gamma_L+1.0)))/(1.0+((P_STAR/W_L(3))*(gamma_L-1.0)/(gamma_L+1.0)));
 				soln(1) = S_STAR;
 				soln(3) = P_STAR;
 			}
