@@ -24,13 +24,7 @@ exact_rs_idealgas :: exact_rs_idealgas (double gamma_L, double gamma_R)
 
 
 
-
-
-
-
-
-
-void exact_rs_idealgas :: solve_RP (const blitz::Array<double,1>& W_L, const blitz::Array<double,1>& W_R)
+void exact_rs_idealgas :: solve_RP (const Eigen::Vector3d& W_L, const Eigen::Vector3d& W_R)
 {
 	assert(W_L(0) >= 0.0);
 	assert(W_L(2) >= 0.0);
@@ -95,11 +89,9 @@ void exact_rs_idealgas :: solve_RP (const blitz::Array<double,1>& W_L, const bli
 
 
 
-
-
-blitz::Array<double,1> exact_rs_idealgas :: sample_solution (const blitz::Array<double,1>& W_L, const blitz::Array<double,1>& W_R, double S)
+Eigen::Vector3d exact_rs_idealgas :: sample_solution (const Eigen::Vector3d& W_L, const Eigen::Vector3d& W_R, double S)
 {
-	blitz::Array<double,1> W (3);
+	Eigen::Vector3d W;
 
 	
 	// Find appropriate part of solution and return primitives
@@ -196,9 +188,9 @@ blitz::Array<double,1> exact_rs_idealgas :: sample_solution (const blitz::Array<
 
 void exact_rs_idealgas :: celledge_primitives_2D (
 		
-	const blitz::Array<double,1>& W_L, 
-	const blitz::Array<double,1>& W_R,
-	blitz::Array<double,1>& soln
+	const Eigen::Vector4d& W_L, 
+	const Eigen::Vector4d& W_R,
+	Eigen::Vector4d& soln
 )
 {
 	const double v_L = W_L(2);
@@ -328,14 +320,6 @@ void exact_rs_idealgas :: celledge_primitives_2D (
 
 
 
-
-
-
-
-
-
-
-
 double exact_rs_idealgas :: find_p_star_newtonraphson (
 	
 	const double rho_L,
@@ -449,17 +433,7 @@ double exact_rs_idealgas :: f_deriv (double p_star, double rho, double p, double
 
 
 
-
-
-
-
-
-
-
-
-
-
-void exact_rs_idealgas :: set_left_rarefaction_fan_state (const blitz::Array<double,1>& W_L, double S, blitz::Array<double,1>& W)
+void exact_rs_idealgas :: set_left_rarefaction_fan_state (const Eigen::Vector3d& W_L, double S, Eigen::Vector3d& W)
 {
 	double a_L = a(W_L(0),W_L(2),gamma_L);
 	W(0) = W_L(0)*std::pow((2.0/(gamma_L+1.0)) + ((gamma_L-1.0)/(a_L*(gamma_L+1.0)))*(W_L(1) - S), 2.0/(gamma_L - 1.0));
@@ -470,27 +444,13 @@ void exact_rs_idealgas :: set_left_rarefaction_fan_state (const blitz::Array<dou
 
 
 
-
-void exact_rs_idealgas :: set_right_rarefaction_fan_state (const blitz::Array<double,1>& W_R, double S, blitz::Array<double,1>& W)
+void exact_rs_idealgas :: set_right_rarefaction_fan_state (const Eigen::Vector3d& W_R, double S, Eigen::Vector3d& W)
 {
 	double a_R = a(W_R(0),W_R(2),gamma_R);
 	W(0) = W_R(0)*std::pow((2.0/(gamma_R+1.0)) - ((gamma_R-1.0)/(a_R*(gamma_R+1.0)))*(W_R(1) - S), 2.0/(gamma_R - 1.0));
 	W(1) = (2.0/(gamma_R+1.0))*(- a_R + S + ((gamma_R-1.0)/2.0)*W_R(1));
 	W(2) = W_R(2)*std::pow((2.0/(gamma_R+1.0)) - ((gamma_R-1.0)/(a_R*(gamma_R+1.0)))*(W_R(1) - S), (2.0*gamma_R)/(gamma_R-1.0));
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -506,15 +466,10 @@ double exact_rs_idealgas :: Q_K (double p_star, double rho, double p, double gam
 }
 	
 
-
-
-
 double exact_rs_idealgas :: a (double rho, double p, double gamma)
 {
 	return sqrt(gamma*(p/rho));
 }
-
-
 
 
 

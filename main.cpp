@@ -2,7 +2,6 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <blitz/array.h>
 
 
 
@@ -20,8 +19,8 @@ int main()
 	for (int TC = 1; TC <= 5; TC++)
 	{
 		
-		blitz::Array<double,1> WL (3);
-		blitz::Array<double,1> WR (3);
+		Eigen::Vector3d WL (3);
+		Eigen::Vector3d WR (3);
 		double t;
 		std::string filename;
 	
@@ -112,9 +111,15 @@ int main()
 		while (x <= xmax)
 		{
 			double S = x/t;
-			blitz::Array<double,1> soln (RS.sample_solution(WL, WR, S - offset/t));
+			Eigen::Vector3d soln (RS.sample_solution(WL, WR, S - offset/t));
 			double thisgamma = S - offset/t < RS.S_STAR ? gammaL : gammaR;
-			outfile << x << " " << soln(0) << " " << soln(1) << " " << soln(2) << " " << idealgas_e(soln(0), soln(2), thisgamma) << std::endl;
+			outfile << x << " " 
+				<< soln(0) << " " 
+				<< soln(1) << " " 
+				<< soln(2) << " " 
+				<< idealgas_e(soln(0), soln(2), thisgamma) 
+				<< std::endl;
+
 			x += delx;
 		}
 	}
